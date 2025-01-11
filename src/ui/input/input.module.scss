@@ -1,0 +1,41 @@
+.container {
+    position: relative;
+
+    .input {
+        padding         : 9px 24px 9px 64px;
+        width           : 100%;
+        border          : 1px solid var(--white-30);
+        border-radius   : 20px;
+        background-color: var(--white-07);
+        color           : var(--white);
+        line-height     : 21px;
+        font-size       : 14px;
+
+        &:hover {
+            border-color: var(--blue);
+        }
+
+        &:focus {
+            box-shadow         : 0 0 0 4px var(--blue-50);
+            transition-property: box-shadow;
+            transition-duration: 300ms;
+            border-color       : var(--blue);
+        }
+
+        &::placeholder {
+            font-size     : 14px;
+            line-height   : 21px;
+            letter-spacing: -0.4px;
+            color         : var(--white-60);
+        }
+    }
+
+    .icon {
+        position: absolute;
+        top     : 9px;
+        left    : 20px;
+        width   : 24px;
+        height  : 24px;
+        z-index : var(--layer-decor);
+    }
+}

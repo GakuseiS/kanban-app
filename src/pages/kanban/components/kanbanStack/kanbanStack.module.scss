@@ -1,0 +1,55 @@
+.container {
+    padding         : 32px 0 32px 16px;
+    background-color: var(--black);
+    overflow        : hidden;
+
+    max-height      : calc(100vh - 150px - 60px);
+
+    .head {
+        display      : flex;
+        align-items  : center;
+        margin-bottom: 16px;
+        padding-right: 16px;
+
+        .titleGroup {
+            display       : flex;
+            align-items   : center;
+            gap           : 8px;
+            font-size     : 24px;
+            line-height   : 28px;
+            letter-spacing: 0.0036em;
+        }
+
+        .button {
+            margin-left     : auto;
+            color           : var(--white-60);
+            user-select     : none;
+            cursor          : pointer;
+            background-color: transparent;
+
+            &:hover {
+                color: var(--blue);
+            }
+        }
+    }
+
+    .tasks {
+        display      : grid;
+        gap          : 16px;
+        overflow-y   : auto;
+        max-height   : calc(100vh - 150px - 58px - 120px);
+        padding-right: 16px;
+
+        &::-webkit-scrollbar-thumb {
+            background: var(--white-30);
+        }
+
+        &::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background-color: var(--white-10);
+        }
+    }
+}

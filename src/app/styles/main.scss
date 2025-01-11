@@ -1,0 +1,27 @@
+@use './colors.scss' as *;
+@use './normalize.scss' as *;
+@use './fonts.scss' as *;
+@use './layers.scss' as *;
+
+body {
+    color         : var(--white);
+    font-size     : 14px;
+    line-height   : 21px;
+    letter-spacing: -0.4px;
+}
+
+* {
+    box-sizing : border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+main {
+    display        : flex;
+    flex-direction : column;
+    justify-content: space-between;
+    align-items    : center;
+
+    & > * {
+        width: 100%;
+    }
+}
