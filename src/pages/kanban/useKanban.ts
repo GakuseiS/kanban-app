@@ -70,7 +70,7 @@ export const useKanban = () => {
     if (taskIndex === undefined || !tasks || !typedTasks) return;
     const preparedTasks = typedTasks.toSpliced(taskIndex, 1);
     const nextState = { ...tasks, [type]: preparedTasks };
-    updateTasksState({ ...tasks, [type]: preparedTasks });
+    updateTasksState(nextState);
     return nextState;
   };
 
