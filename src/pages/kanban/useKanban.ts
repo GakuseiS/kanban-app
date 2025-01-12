@@ -3,7 +3,7 @@ import type { TKanbanTask, TKanbanTaskType } from '@/store/kanban.type';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { KANBAN_TASKS_KEY } from '@/constants/kanban';
 import { KANBAN_DATA } from '@/store/kanbanData';
-import { isDateString } from '@/utils/dateCompare';
+import { isDateString } from '@/utils/dateUtils';
 import { getDateMonthYear } from '@/utils/dateConvert';
 
 type TTasksState = Record<TKanbanTaskType, TKanbanTask[]>;

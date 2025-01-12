@@ -2,11 +2,11 @@ import { FC } from 'react';
 import clsx from 'clsx';
 import type { TKanbanTask, TKanbanTaskType } from '@/store/kanban.type';
 import { getDateMonthYear } from '@/utils/dateConvert';
-import { isDateInPast } from '@/utils/dateCompare';
 import { CheckIcon, CrossIcon, EditIcon, TrashIcon } from '@/ui/icons';
 import { InputText } from '@/ui/input/text';
 import { InputDate } from '@/ui/input/date';
 import { useKanbanTask } from './useKanbanTask';
+import { isTaskOutdated } from './lib/isTaskOutdated';
 import styles from './kanbanTask.module.scss';
 
 type KanbanTaskProps = {
@@ -65,7 +65,7 @@ export const KanbanTask: FC<KanbanTaskProps> = (props) => {
             setError={(isValid) => onValidate('endDay', isValid)}
           />
         ) : (
-          <span className={clsx(styles.value, isDateInPast(task.endDay) && task.type !== 'done' && styles.overdue)}>
+          <span className={clsx(styles.value, isTaskOutdated(task) && styles.overdue)}>
             {getDateMonthYear(task.endDay)}
           </span>
         )}
