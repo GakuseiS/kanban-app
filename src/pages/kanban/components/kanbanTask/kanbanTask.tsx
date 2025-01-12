@@ -5,7 +5,7 @@ import { getDateMonthYear } from '@/utils/dateConvert';
 import { isDateInPast } from '@/utils/dateCompare';
 import { CheckIcon, CrossIcon, EditIcon, TrashIcon } from '@/ui/icons';
 import { InputText } from '@/ui/input/text';
-import { DateInput } from '@/ui/input/date/date';
+import { InputDate } from '@/ui/input/date';
 import { useKanbanTask } from './useKanbanTask';
 import styles from './kanbanTask.module.scss';
 
@@ -35,7 +35,7 @@ export const KanbanTask: FC<KanbanTaskProps> = (props) => {
       <div className={styles.row}>
         <span className={styles.label}>Начало:</span>
         {isEditMode ? (
-          <DateInput
+          <InputDate
             value={taskFields.startDay}
             error={errors.startDay}
             onValueChange={(value) => onFieldChange('startDay', value)}
@@ -58,7 +58,7 @@ export const KanbanTask: FC<KanbanTaskProps> = (props) => {
       <div className={styles.row}>
         <span className={styles.label}>Окончание:</span>
         {isEditMode ? (
-          <DateInput
+          <InputDate
             value={taskFields.endDay}
             onValueChange={(value) => onFieldChange('endDay', value)}
             setError={(isValid) => onValidate('endDay', isValid)}

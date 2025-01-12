@@ -1,5 +1,6 @@
-export const isDateInPast = (date: number) => {
-  return date < new Date().valueOf();
+export const isDateInPast = (date: number | Date) => {
+  const todayDate = new Date();
+  return new Date(date) < todayDate;
 };
 
 export const isDateString = (string: string) => {

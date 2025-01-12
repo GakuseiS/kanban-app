@@ -9,7 +9,7 @@ type InputDateProps = {
   setError?: (valid: boolean) => void;
 };
 
-export const DateInput: FC<InputDateProps> = (props) => {
+export const InputDate: FC<InputDateProps> = (props) => {
   const { value, onValueChange, setError, error, placeholder = 'дд.мм.гггг' } = props;
 
   const onBlur = () => {
