@@ -28,10 +28,11 @@ export const KanbanTask: FC<KanbanTaskProps> = (props) => {
     onSubmitClick,
     onValidate,
     handleEditMode,
+    handleOnDrag,
   } = useKanbanTask(props);
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} draggable onDragStart={(event) => handleOnDrag(event, task)}>
       <div className={styles.row}>
         <span className={styles.label}>Начало:</span>
         {isEditMode ? (

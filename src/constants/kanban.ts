@@ -18,3 +18,4 @@ export const KANBAN_STACK_TYPES = [
 ] as const;
 
 export const KANBAN_TASKS_KEY = 'kanban/tasks';
+export const KANBAN_TASK_DRAG_KEY = 'drag/task';

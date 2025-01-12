@@ -1,12 +1,14 @@
-import { FC, ReactNode } from 'react';
-import { TKanbanTaskType } from '@/store/kanban.type';
+import { FC, ReactNode, DragEvent } from 'react';
+import type { TKanbanTask, TKanbanTaskType } from '@/store/kanban.type';
 import { GhostIcon, HappyIcon, SmileIcon, UpsideDownIcon } from '@/ui/icons';
+import { KANBAN_TASK_DRAG_KEY } from '@/constants/kanban';
 import styles from './kanbanStack.module.scss';
 
 type KanbanStackProps = {
   title: string;
   type: TKanbanTaskType;
   children: ReactNode;
+  onTaskDrop: (task: TKanbanTask, type: TKanbanTaskType) => void;
 };
 
 const KANBAN_STACK_ICONS = {
@@ -16,9 +18,18 @@ const KANBAN_STACK_ICONS = {
   done: <GhostIcon />,
 };
 
-export const KanbanStack: FC<KanbanStackProps> = ({ title, type, children }) => {
+export const KanbanStack: FC<KanbanStackProps> = ({ title, type, children, onTaskDrop }) => {
+  const handleOnDragOver = (event: DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+  };
+  const handleOnDrop = (event: DragEvent<HTMLDivElement>) => {
+    const task = JSON.parse(event.dataTransfer.getData(KANBAN_TASK_DRAG_KEY));
+    console.log(task);
+    onTaskDrop(task, type);
+  };
+
   return (
-    <div className={styles.container}>
+    <div className={styles.container} onDragOver={handleOnDragOver} onDrop={handleOnDrop}>
       <div className={styles.head}>
         <div className={styles.titleGroup}>
           {KANBAN_STACK_ICONS[type]}

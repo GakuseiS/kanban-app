@@ -56,13 +56,22 @@ export const useKanban = () => {
       return { ...accumulator, [type]: accumulator[type] ? [...accumulator[type], currentValue] : [currentValue] };
     }, {} as TTasksState);
   };
+  const onTaskDrop = (task: TKanbanTask, type: TKanbanTaskType) => {
+    const updatedTasks = onTaskDelete(task.id, task.type);
+    if (!updatedTasks) return;
+    const sortedTasksByType = sortTasks([...updatedTasks[type], { ...task, type }]);
+    const nextState = { ...updatedTasks, [type]: sortedTasksByType };
+    updateTasksState(nextState);
+  };
 
   const onTaskDelete = (id: number, type: TKanbanTaskType) => {
     const typedTasks = tasks?.[type];
     const taskIndex = typedTasks?.findIndex((task) => task.id === id);
     if (taskIndex === undefined || !tasks || !typedTasks) return;
     const preparedTasks = typedTasks.toSpliced(taskIndex, 1);
+    const nextState = { ...tasks, [type]: preparedTasks };
     updateTasksState({ ...tasks, [type]: preparedTasks });
+    return nextState;
   };
 
   const updateTasksState = (tasks: TTasksState) => {
@@ -91,5 +100,6 @@ export const useKanban = () => {
     tasks,
     onTaskDelete,
     onTaskTextEdit,
+    onTaskDrop,
   };
 };

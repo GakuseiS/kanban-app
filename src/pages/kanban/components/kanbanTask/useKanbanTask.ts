@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, DragEvent } from 'react';
 import type { TTaskFieldsErrorsState, TTaskFieldsState } from './kanbanTask.type';
 import type { TKanbanTask, TKanbanTaskType } from '@/store/kanban.type';
 import { convertToISODate, getDateMonthYear } from '@/utils/dateConvert';
+import { KANBAN_TASK_DRAG_KEY } from '@/constants/kanban';
 
 type TKanbanTaskHookParams = {
   task: TKanbanTask;
@@ -60,6 +61,10 @@ export const useKanbanTask = ({ task, onDelete, onSubmit }: TKanbanTaskHookParam
     setErrors((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleOnDrag = (event: DragEvent<HTMLDivElement>, task: TKanbanTask) => {
+    event.dataTransfer.setData(KANBAN_TASK_DRAG_KEY, JSON.stringify(task));
+  };
+
   const prepareTask = (state: TTaskFieldsState) => {
     return {
       startDay: new Date(convertToISODate(state.startDay)).valueOf(),
@@ -79,5 +84,6 @@ export const useKanbanTask = ({ task, onDelete, onSubmit }: TKanbanTaskHookParam
     onSubmitClick,
     onValidate,
     handleEditMode,
+    handleOnDrag,
   };
 };
