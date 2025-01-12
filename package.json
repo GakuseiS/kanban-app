@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint ."
+    "predeploy": "npm run build",
+    "lint": "eslint .",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "clsx": "^2.1.1",

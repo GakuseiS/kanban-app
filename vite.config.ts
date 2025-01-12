@@ -13,7 +13,7 @@ export default defineConfig({
       targets: ['defaults', 'not IE 11'],
     }),
   ],
-  base: '/kanban-app',
+  base: '/kanban-app/',
   envDir: './env',
   server: {
     host: '127.0.0.1',
