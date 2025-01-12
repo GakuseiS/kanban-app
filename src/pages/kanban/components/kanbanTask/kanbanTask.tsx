@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import clsx from 'clsx';
-import { TKanbanTask, TKanbanTaskType } from '@/store/kanban.type';
+import type { TKanbanTask, TKanbanTaskType } from '@/store/kanban.type';
 import { getDateMonthYear } from '@/utils/dateConvert';
 import { isDateInPast } from '@/utils/dateCompare';
 import { CheckIcon, CrossIcon, EditIcon, TrashIcon } from '@/ui/icons';
