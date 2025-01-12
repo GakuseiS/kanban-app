@@ -14,3 +14,7 @@ export const getDateMonthYear = (dateTime: number) => {
 
   return `${day}.${month}.${year}`;
 };
+
+export const convertToISODate = (date: string) => {
+  return date.split('.').reverse().join('-');
+};

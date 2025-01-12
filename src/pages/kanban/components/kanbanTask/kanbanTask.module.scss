@@ -55,4 +55,27 @@
 
         }
     }
+
+    .buttons {
+        display    : flex;
+        gap        : 8px;
+        margin-left: auto;
+
+        .button {
+            height          : 40px;
+            width           : 40px;
+            padding         : 8px;
+            border-radius   : 50%;
+            background-color: var(--white-08);
+            cursor          : pointer;
+
+            &:hover:not([disabled]) {
+                background-color: var(--white-20);
+            }
+
+            &[disabled] {
+                cursor: not-allowed;
+            }
+        }
+    }
 }

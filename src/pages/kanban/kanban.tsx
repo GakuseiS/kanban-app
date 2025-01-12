@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Container } from '@/ui/container';
-import { Input } from '@/ui/input';
+import { InputSearch } from '@/ui/input/search';
 import { KANBAN_STACK_TYPES } from '@/constants/kanban';
 import { KanbanStack } from './components/kanbanStack';
 import { KANBAN_DATA } from '@/store/kanbanData';
@@ -10,12 +10,22 @@ import styles from './kanban.module.scss';
 
 type TTasksState = Record<TKanbanTaskType, TKanbanTask[]>;
 
+const KANBAN_TASKS_KEY = 'kanban/tasks';
 export const KanbanPage = () => {
   const [tasks, setTasks] = useState<TTasksState>();
 
   useEffect(() => {
-    setTasks(groupTasksByType(sortTasks(KANBAN_DATA)));
+    const localStorageTasks = localStorage.getItem(KANBAN_TASKS_KEY);
+    setTasks(localStorageTasks ? JSON.parse(localStorageTasks) : groupTasksByType(sortTasks(KANBAN_DATA)));
   }, []);
+
+  const onTaskTextEdit = (task: TKanbanTask) => {
+    const typedTasks = tasks?.[task.type];
+    const taskIndex = typedTasks?.findIndex((task) => task.id === task.id);
+    if (taskIndex === undefined || !tasks || !typedTasks) return;
+    const preparedTasks = sortTasks(typedTasks.with(taskIndex, task));
+    updateTasksState({ ...tasks, [task.type]: preparedTasks });
+  };
 
   const sortTasks = (tasks: TKanbanTask[]) => {
     return tasks.sort((a, b) => a.startDay - b.startDay);
@@ -33,8 +43,16 @@ export const KanbanPage = () => {
     const taskIndex = typedTasks?.findIndex((task) => task.id === id);
     if (taskIndex === undefined || !tasks || !typedTasks) return;
     const preparedTasks = typedTasks.toSpliced(taskIndex, 1);
+    updateTasksState({ ...tasks, [type]: preparedTasks });
+  };
 
-    setTasks({ ...tasks, [type]: preparedTasks });
+  const updateTasksState = (tasks: TTasksState) => {
+    setTasks(tasks);
+    updateLocalStorage(tasks);
+  };
+
+  const updateLocalStorage = (tasks: TTasksState) => {
+    localStorage.setItem(KANBAN_TASKS_KEY, JSON.stringify(tasks));
   };
 
   return (
@@ -42,12 +60,14 @@ export const KanbanPage = () => {
       <Container>
         <div className={styles.head}>
           <h1 className={styles.title}>Your tasks</h1>
-          <Input placeholder='поиск...' />
+          <InputSearch placeholder='поиск...' />
         </div>
         <div className={styles.content}>
           {KANBAN_STACK_TYPES.map((stackType) => (
             <KanbanStack key={stackType.type} title={stackType.title} type={stackType.type}>
-              {tasks?.[stackType.type].map((task) => <KanbanTask key={task.id} task={task} onDelete={onTaskDelete} />)}
+              {tasks?.[stackType.type].map((task) => (
+                <KanbanTask key={task.id} task={task} onDelete={onTaskDelete} onSubmit={onTaskTextEdit} />
+              ))}
             </KanbanStack>
           ))}
         </div>

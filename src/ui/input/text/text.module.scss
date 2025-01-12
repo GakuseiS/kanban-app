@@ -1,0 +1,20 @@
+.input {
+    padding         : 0 9px;
+    border          : 1px solid var(--white-50);
+    background-color: transparent;
+    border-radius   : 4px;
+    caret-color     : var(--blue);
+    color           : var(--white);
+    font-size       : 14px;
+    line-height     : 22px;
+    letter-spacing  : -0.4px;
+
+    &.error {
+        border-color: var(--red);
+    }
+
+    &:focus,
+    &:hover {
+        border-color: var(--blue);
+    }
+}
