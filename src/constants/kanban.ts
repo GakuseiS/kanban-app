@@ -16,3 +16,5 @@ export const KANBAN_STACK_TYPES = [
     type: 'done',
   },
 ] as const;
+
+export const KANBAN_TASKS_KEY = 'kanban/tasks';
