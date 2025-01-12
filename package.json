@@ -1,7 +1,7 @@
 {
   "name": "kanban-app",
   "private": true,
-  "homepage": "https://gakuseis.github.io/kanban-app/",
+  "homepage": "https://gakuseis.github.io/kanban-app",
   "version": "1.0.0",
   "type": "module",
   "scripts": {
