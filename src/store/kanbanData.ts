@@ -1,4 +1,4 @@
-import { TKanbanTask } from './kanban.type';
+import type { TKanbanTask } from './kanban.type';
 
 export const KANBAN_DATA: TKanbanTask[] = [
   {

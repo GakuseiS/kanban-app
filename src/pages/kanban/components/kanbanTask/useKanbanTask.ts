@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import type { TTaskFieldsErrorsState, TTaskFieldsState } from './kanbanTask.type';
-import { TKanbanTask, TKanbanTaskType } from '@/store/kanban.type';
+import type { TKanbanTask, TKanbanTaskType } from '@/store/kanban.type';
 import { convertToISODate, getDateMonthYear } from '@/utils/dateConvert';
 
 type TKanbanTaskHookParams = {
