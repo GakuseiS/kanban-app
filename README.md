@@ -16,4 +16,4 @@ npm run start
 npm run test
 ```
 
-Путь до теста на определение просроченной задачи [PATH](src/test/dateCompare.test.ts)
+Путь до теста на определение просроченной задачи [PATH](src/pages/kanban/components/kanbanTask/lib/isTaskOutdated.test.ts)
