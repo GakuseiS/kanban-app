@@ -9,6 +9,8 @@ type KanbanStackProps = {
   type: TKanbanTaskType;
   children: ReactNode;
   onTaskDrop: (task: TKanbanTask, type: TKanbanTaskType) => void;
+  onCreateTask: VoidFunction;
+  withCreateButton: boolean;
 };
 
 const KANBAN_STACK_ICONS = {
@@ -18,13 +20,19 @@ const KANBAN_STACK_ICONS = {
   done: <GhostIcon />,
 };
 
-export const KanbanStack: FC<KanbanStackProps> = ({ title, type, children, onTaskDrop }) => {
+export const KanbanStack: FC<KanbanStackProps> = ({
+  title,
+  type,
+  children,
+  onTaskDrop,
+  onCreateTask,
+  withCreateButton,
+}) => {
   const handleOnDragOver = (event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
   };
   const handleOnDrop = (event: DragEvent<HTMLDivElement>) => {
     const task = JSON.parse(event.dataTransfer.getData(KANBAN_TASK_DRAG_KEY));
-    console.log(task);
     onTaskDrop(task, type);
   };
 
@@ -35,7 +43,11 @@ export const KanbanStack: FC<KanbanStackProps> = ({ title, type, children, onTas
           {KANBAN_STACK_ICONS[type]}
           <h3>{title}</h3>
         </div>
-        {type === 'todo' ? <button className={styles.button}>+ Добавить</button> : null}
+        {withCreateButton ? (
+          <button className={styles.button} onClick={onCreateTask}>
+            + Добавить
+          </button>
+        ) : null}
       </div>
       <div className={styles.tasks}>{children}</div>
     </div>

@@ -7,7 +7,8 @@ import { useKanban } from './useKanban';
 import styles from './kanban.module.scss';
 
 export const KanbanPage = () => {
-  const { search, setSearch, tasks, onTaskDelete, onTaskTextEdit, onTaskDrop } = useKanban();
+  const { search, tasks, withNewTask, handleEmptyTask, setSearch, onTaskDelete, onTaskEdit, onTaskDrop, onTaskCreate } =
+    useKanban();
 
   return (
     <div className={styles.page}>
@@ -18,9 +19,19 @@ export const KanbanPage = () => {
         </div>
         <div className={styles.content}>
           {KANBAN_STACK_TYPES.map((stackType) => (
-            <KanbanStack key={stackType.type} title={stackType.title} type={stackType.type} onTaskDrop={onTaskDrop}>
+            <KanbanStack
+              key={stackType.type}
+              title={stackType.title}
+              type={stackType.type}
+              onTaskDrop={onTaskDrop}
+              onCreateTask={handleEmptyTask}
+              withCreateButton={!withNewTask && stackType.type === 'todo'}
+            >
+              {withNewTask && stackType.type === 'todo' ? (
+                <KanbanTask onSubmit={onTaskCreate} onClose={handleEmptyTask} />
+              ) : null}
               {tasks?.[stackType.type].map((task) => (
-                <KanbanTask key={task.id} task={task} onDelete={onTaskDelete} onSubmit={onTaskTextEdit} />
+                <KanbanTask key={task.id} task={task} onDelete={onTaskDelete} onSubmit={onTaskEdit} />
               ))}
             </KanbanStack>
           ))}

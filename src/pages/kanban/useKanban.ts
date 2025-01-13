@@ -13,6 +13,7 @@ export const useKanban = () => {
   const [tasks, setTasks] = useState<TTasksState>();
   const [search, setSearch] = useState<string>('');
   const debouncedSearch = useDebouncedValue<string>(search, 300);
+  const [withNewTask, setWithNewTask] = useState<boolean>(false);
 
   useEffect(() => {
     const localStorageTasks = localStorage.getItem(KANBAN_TASKS_KEY);
@@ -38,12 +39,20 @@ export const useKanban = () => {
     queryTasks(debouncedSearch);
   }, [debouncedSearch, initTasks]);
 
-  const onTaskTextEdit = (task: TKanbanTask) => {
+  const onTaskEdit = (task: TKanbanTask) => {
     const typedTasks = tasks?.[task.type];
     const taskIndex = typedTasks?.findIndex((task) => task.id === task.id);
     if (taskIndex === undefined || !tasks || !typedTasks) return;
     const preparedTasks = sortTasks(typedTasks.with(taskIndex, task));
     updateTasksState({ ...tasks, [task.type]: preparedTasks });
+  };
+
+  const onTaskCreate = (task: TKanbanTask) => {
+    const typedTasks = tasks?.[task.type];
+    if (!tasks || !typedTasks) return;
+    const preparedTasks = sortTasks([task, ...typedTasks]);
+    updateTasksState({ ...tasks, [task.type]: preparedTasks });
+    handleEmptyTask();
   };
 
   const sortTasks = (tasks: TKanbanTask[]) => {
@@ -94,12 +103,19 @@ export const useKanban = () => {
     return isTextMatches;
   };
 
+  const handleEmptyTask = () => {
+    setWithNewTask((prev) => !prev);
+  };
+
   return {
     search,
-    setSearch,
     tasks,
+    withNewTask,
+    setSearch,
     onTaskDelete,
-    onTaskTextEdit,
+    onTaskEdit,
     onTaskDrop,
+    handleEmptyTask,
+    onTaskCreate,
   };
 };

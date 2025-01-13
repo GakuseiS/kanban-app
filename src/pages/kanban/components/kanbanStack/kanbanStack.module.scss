@@ -39,9 +39,6 @@
         padding-right : 16px;
         align-items   : start;
         grid-auto-rows: max-content;
-        @media (max-width: 1279px) {
-            height: calc(100vh - 150px - 58px - 120px);
-        }
 
         &::-webkit-scrollbar-thumb {
             background: var(--white-30);

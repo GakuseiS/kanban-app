@@ -10,9 +10,10 @@ import { isTaskOutdated } from './lib/isTaskOutdated';
 import styles from './kanbanTask.module.scss';
 
 type KanbanTaskProps = {
-  task: TKanbanTask;
-  onDelete: (id: number, type: TKanbanTaskType) => void;
+  task?: TKanbanTask;
+  onDelete?: (id: number, type: TKanbanTaskType) => void;
   onSubmit: (task: TKanbanTask) => void;
+  onClose?: VoidFunction;
 };
 
 export const KanbanTask: FC<KanbanTaskProps> = (props) => {
@@ -32,10 +33,10 @@ export const KanbanTask: FC<KanbanTaskProps> = (props) => {
   } = useKanbanTask(props);
 
   return (
-    <div className={styles.container} draggable onDragStart={(event) => handleOnDrag(event, task)}>
+    <div className={styles.container} draggable={!!task} onDragStart={(event) => handleOnDrag(event, task)}>
       <div className={styles.row}>
         <span className={styles.label}>Начало:</span>
-        {isEditMode ? (
+        {isEditMode || !task ? (
           <InputDate
             value={taskFields.startDay}
             error={errors.startDay}
@@ -58,7 +59,7 @@ export const KanbanTask: FC<KanbanTaskProps> = (props) => {
       </div>
       <div className={styles.row}>
         <span className={styles.label}>Окончание:</span>
-        {isEditMode ? (
+        {isEditMode || !task ? (
           <InputDate
             value={taskFields.endDay}
             onValueChange={(value) => onFieldChange('endDay', value)}
@@ -72,7 +73,7 @@ export const KanbanTask: FC<KanbanTaskProps> = (props) => {
       </div>
       <div className={styles.row}>
         <span className={styles.label}>Описание:</span>
-        {isEditMode ? (
+        {isEditMode || !task ? (
           <InputText value={taskFields.text} onValueChange={(value) => onFieldChange('text', value)} />
         ) : (
           <span className={styles.value}>{task.text}</span>
