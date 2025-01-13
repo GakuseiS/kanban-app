@@ -36,6 +36,7 @@
         gap           : 16px;
         overflow-y    : auto;
         max-height    : calc(100vh - 150px - 58px - 120px);
+        max-height    : calc(100dvh - 150px - 58px - 120px);
         padding-right : 16px;
         align-items   : start;
         grid-auto-rows: max-content;
