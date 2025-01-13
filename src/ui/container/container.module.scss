@@ -1,11 +1,11 @@
 .container {
     margin    : 0 auto;
     min-height: calc(100vh - 10px);
-    min-height: 100dvh;
     width     : 1920px;
     padding   : 58px 40px;
     @media (max-width: 768px) {
-        width  : 1320px;
-        padding: 58px 24px;
+        width     : 1320px;
+        min-height: 100dvh;
+        padding   : 58px 24px;
     }
 }
