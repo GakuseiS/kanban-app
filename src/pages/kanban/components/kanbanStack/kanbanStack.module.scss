@@ -32,6 +32,7 @@
     }
 
     .tasks {
+        position      : relative;
         display       : grid;
         gap           : 16px;
         overflow-y    : auto;

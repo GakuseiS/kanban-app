@@ -41,7 +41,7 @@ export const useKanban = () => {
 
   const onTaskEdit = (task: TKanbanTask) => {
     const typedTasks = tasks?.[task.type];
-    const taskIndex = typedTasks?.findIndex((task) => task.id === task.id);
+    const taskIndex = typedTasks?.findIndex((typedTask) => typedTask.id === task.id);
     if (taskIndex === undefined || !tasks || !typedTasks) return;
     const preparedTasks = sortTasks(typedTasks.with(taskIndex, task));
     updateTasksState({ ...tasks, [task.type]: preparedTasks });
