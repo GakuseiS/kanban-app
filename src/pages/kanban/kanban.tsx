@@ -1,3 +1,4 @@
+import FlipMove from 'react-flip-move';
 import { Container } from '@/ui/container';
 import { InputSearch } from '@/ui/input/search';
 import { KANBAN_STACK_TYPES } from '@/constants/kanban';
@@ -30,9 +31,11 @@ export const KanbanPage = () => {
               {withNewTask && stackType.type === 'todo' ? (
                 <KanbanTask onSubmit={onTaskCreate} onClose={handleEmptyTask} />
               ) : null}
-              {tasks?.[stackType.type].map((task) => (
-                <KanbanTask key={task.id} task={task} onDelete={onTaskDelete} onSubmit={onTaskEdit} />
-              ))}
+              <FlipMove typeName={null}>
+                {tasks?.[stackType.type].map((task) => (
+                  <KanbanTask key={task.id} task={task} onDelete={onTaskDelete} onSubmit={onTaskEdit} />
+                ))}
+              </FlipMove>
             </KanbanStack>
           ))}
         </div>

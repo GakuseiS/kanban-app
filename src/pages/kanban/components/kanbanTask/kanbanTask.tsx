@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, forwardRef } from 'react';
 import clsx from 'clsx';
 import type { TKanbanTask, TKanbanTaskType } from '@/store/kanban.type';
 import { getDateMonthYear } from '@/utils/dateConvert';
@@ -16,7 +16,7 @@ type KanbanTaskProps = {
   onClose?: VoidFunction;
 };
 
-export const KanbanTask: FC<KanbanTaskProps> = (props) => {
+export const KanbanTask: FC<KanbanTaskProps> = forwardRef<HTMLDivElement, KanbanTaskProps>((props, ref) => {
   const { task } = props;
   const {
     taskFields,
@@ -33,7 +33,7 @@ export const KanbanTask: FC<KanbanTaskProps> = (props) => {
   } = useKanbanTask(props);
 
   return (
-    <div className={styles.container} draggable={!!task} onDragStart={(event) => handleOnDrag(event, task)}>
+    <div ref={ref} className={styles.container} draggable={!!task} onDragStart={(event) => handleOnDrag(event, task)}>
       <div className={styles.row}>
         <span className={styles.label}>Начало:</span>
         {isEditMode || !task ? (
@@ -91,4 +91,4 @@ export const KanbanTask: FC<KanbanTaskProps> = (props) => {
       ) : null}
     </div>
   );
-};
+});
