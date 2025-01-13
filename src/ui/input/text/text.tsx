@@ -14,6 +14,7 @@ type InputTextProps = {
 
 export const InputText: FC<InputTextProps> = (props) => {
   const { onValueChange, onChange, error, ...restProps } = props;
+
   const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     onValueChange?.(event.target.value);
     onChange?.(event);

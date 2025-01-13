@@ -12,7 +12,7 @@ type TKanbanTaskHookParams = {
   onClose?: VoidFunction;
 };
 
-const defaultErrorsState = {
+const DEFAULT_ERRORS_STATE = {
   text: false,
   startDay: false,
   endDay: false,
@@ -29,7 +29,7 @@ const prepareState = (task?: TKanbanTask) => {
 export const useKanbanTask = ({ task, onDelete, onSubmit, onClose }: TKanbanTaskHookParams) => {
   const [taskFields, setTaskFields] = useState<TTaskFieldsState>(prepareState(task));
   const [isEditMode, setEditMode] = useState<boolean>(!task);
-  const [errors, setErrors] = useState<TTaskFieldsErrorsState>(defaultErrorsState);
+  const [errors, setErrors] = useState<TTaskFieldsErrorsState>(DEFAULT_ERRORS_STATE);
   const isValid = useMemo(
     () => !Object.values(errors).some(Boolean) && Object.values(taskFields).every(Boolean),
     [errors, taskFields],
@@ -51,7 +51,7 @@ export const useKanbanTask = ({ task, onDelete, onSubmit, onClose }: TKanbanTask
   const resetState = () => {
     if (!task) return;
     setTaskFields(prepareState(task));
-    setErrors(defaultErrorsState);
+    setErrors(DEFAULT_ERRORS_STATE);
   };
 
   const onCrossClick = () => {
