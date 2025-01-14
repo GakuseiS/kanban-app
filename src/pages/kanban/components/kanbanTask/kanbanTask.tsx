@@ -62,6 +62,7 @@ export const KanbanTask: FC<KanbanTaskProps> = forwardRef<HTMLDivElement, Kanban
         {isEditMode || !task ? (
           <InputDate
             value={taskFields.endDay}
+            error={errors.endDay}
             onValueChange={(value) => onFieldChange('endDay', value)}
             setError={(isValid) => onValidate('endDay', isValid)}
           />
