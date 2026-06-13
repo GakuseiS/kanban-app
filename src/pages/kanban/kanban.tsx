@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import FlipMove from 'react-flip-move';
 
 import { Container, InputSearch } from '@/ui';
@@ -11,7 +12,7 @@ import { KanbanTaskTypeEnum } from './types';
 import styles from './kanban.module.scss';
 
 /** Страница канбана */
-export const KanbanPage = () => {
+export const KanbanPage: FC = () => {
   const {
     search,
     tasks,
