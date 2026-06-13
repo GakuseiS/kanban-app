@@ -51,8 +51,8 @@ export const KanbanTask: FC<Props> = forwardRef<HTMLDivElement, Props>((props, r
           <InputDate
             value={taskFields.startDay}
             hasError={errors.startDay}
-            onValueChange={(value) => handleChangeField('startDay', value)}
-            setError={(isValid) => handleValidate('startDay', isValid)}
+            onValueChange={handleChangeField('startDay')}
+            setError={handleValidate('startDay')}
           />
         )}
 
@@ -76,8 +76,8 @@ export const KanbanTask: FC<Props> = forwardRef<HTMLDivElement, Props>((props, r
           <InputDate
             value={taskFields.endDay}
             hasError={errors.endDay}
-            onValueChange={(value) => handleChangeField('endDay', value)}
-            setError={(isValid) => handleValidate('endDay', isValid)}
+            onValueChange={handleChangeField('endDay')}
+            setError={handleValidate('endDay')}
           />
         )}
 
@@ -91,9 +91,7 @@ export const KanbanTask: FC<Props> = forwardRef<HTMLDivElement, Props>((props, r
       <div className={styles.row}>
         <span className={styles.label}>Описание:</span>
 
-        {isEditOrCreateTask && (
-          <InputText value={taskFields.text} onValueChange={(value) => handleChangeField('text', value)} />
-        )}
+        {isEditOrCreateTask && <InputText value={taskFields.text} onValueChange={handleChangeField('text')} />}
 
         {!isEditOrCreateTask && <span className={styles.value}>{task.text}</span>}
       </div>

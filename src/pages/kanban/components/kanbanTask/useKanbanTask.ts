@@ -37,9 +37,9 @@ type ReturnType = {
   /** Обработчик клика на корзину */
   handleClickTrash: VoidFunction;
   /** Обработчик изменения поля */
-  handleChangeField: (name: keyof ITaskFieldsState, value: number | string) => void;
+  handleChangeField: (name: keyof ITaskFieldsState) => (value: string) => void;
   /** Обработчик валидации */
-  handleValidate: (name: keyof ITaskFieldsErrorsState, value: boolean) => void;
+  handleValidate: (name: keyof ITaskFieldsErrorsState) => (value: boolean) => void;
   /** Обработчик наведения при перетаскивании */
   handleOnDrag: (event: DragEvent<HTMLDivElement>, task?: IKanbanTask) => void;
 };
@@ -67,9 +67,11 @@ export const useKanbanTask = ({ task, onDelete, onSubmit, onClose }: Params): Re
     setEditMode((prev) => !prev);
   };
 
-  const handleChangeField = (name: keyof ITaskFieldsState, value: number | string): void => {
-    setTaskFields((prev) => ({ ...prev, [name]: value }));
-  };
+  const handleChangeField =
+    (name: keyof ITaskFieldsState) =>
+    (value: string): void => {
+      setTaskFields((prev) => ({ ...prev, [name]: value }));
+    };
 
   const handleClickCross = (): void => {
     if (task) {
@@ -89,9 +91,11 @@ export const useKanbanTask = ({ task, onDelete, onSubmit, onClose }: Params): Re
     }
   };
 
-  const handleValidate = (name: keyof ITaskFieldsErrorsState, value: boolean): void => {
-    setErrors((prev) => ({ ...prev, [name]: value }));
-  };
+  const handleValidate =
+    (name: keyof ITaskFieldsErrorsState) =>
+    (value: boolean): void => {
+      setErrors((prev) => ({ ...prev, [name]: value }));
+    };
 
   const handleOnDrag = (event: DragEvent<HTMLDivElement>, task?: IKanbanTask): void => {
     if (!task) {
