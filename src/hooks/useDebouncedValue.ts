@@ -1,15 +1,21 @@
 import { useEffect, useState } from 'react';
 
-export const useDebouncedValue = <T>(value: T, delay: number) => {
+/** Хук для отложенного изменения переданного значения
+ *
+ * @param value Значение
+ * @param delay Задержка
+ * @returns Отложенное значение
+ */
+export const useDebouncedValue = <T>(value: T, delay: number): T => {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
 
   useEffect(() => {
-    const handler = setTimeout(() => {
+    const timeout = setTimeout(() => {
       setDebouncedValue(value);
     }, delay);
 
     return () => {
-      clearTimeout(handler);
+      clearTimeout(timeout);
     };
   }, [value, delay]);
 

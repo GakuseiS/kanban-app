@@ -1,31 +1,35 @@
 import { ChangeEvent, FC } from 'react';
 import clsx from 'clsx';
+
 import styles from './text.module.scss';
 
-type InputTextProps = {
+type Props = {
+  /** Значение */
   value?: string;
+  /** Тип поля */
   type?: 'tel' | 'text';
+  /** Плейсхолдер */
   placeholder?: string;
-  onValueChange?: (value: string) => void;
-  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
-  error?: boolean;
+  /** Есть ли ошибка */
+  hasError?: boolean;
+  /** Обработчик выхода из фокуса */
   onBlur?: VoidFunction;
+  /** Обработчик изменения значения */
+  onValueChange?: (value: string) => void;
+  /** Обработчик изменения */
+  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
 };
 
-export const InputText: FC<InputTextProps> = (props) => {
-  const { onValueChange, onChange, error, ...restProps } = props;
+/** Текстовое поле */
+export const InputText: FC<Props> = (props) => {
+  const { onValueChange, onChange, hasError, ...restProps } = props;
 
-  const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
     onValueChange?.(event.target.value);
     onChange?.(event);
   };
 
-  return (
-    <input
-      className={clsx(styles.input, error && styles.error)}
-      {...restProps}
-      onChange={onInputChange}
-      autoComplete='off'
-    />
-  );
+  const inputClassName = clsx(styles.input, hasError && styles.error);
+
+  return <input className={inputClassName} {...restProps} onChange={handleChange} autoComplete='off' />;
 };

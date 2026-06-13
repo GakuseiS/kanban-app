@@ -1,15 +1,28 @@
 import FlipMove from 'react-flip-move';
-import { Container } from '@/ui/container';
-import { InputSearch } from '@/ui/input/search';
-import { KANBAN_STACK_TYPES } from '@/constants/kanban';
+
+import { Container, InputSearch } from '@/ui';
+
 import { KanbanStack } from './components/kanbanStack';
 import { KanbanTask } from './components/kanbanTask';
 import { useKanban } from './useKanban';
+import { KANBAN_STACK_TYPES } from './constants';
+import { KanbanTaskTypeEnum } from './types';
+
 import styles from './kanban.module.scss';
 
+/** Страница канбана */
 export const KanbanPage = () => {
-  const { search, tasks, withNewTask, handleEmptyTask, setSearch, onTaskDelete, onTaskEdit, onTaskDrop, onTaskCreate } =
-    useKanban();
+  const {
+    search,
+    tasks,
+    shouldShowNewTask,
+    handleEmptyTask,
+    setSearch,
+    handleDeleteTask,
+    handleEditTask,
+    handleDropTask,
+    handleCreateTask,
+  } = useKanban();
 
   return (
     <div className={styles.page}>
@@ -18,22 +31,24 @@ export const KanbanPage = () => {
           <h1 className={styles.title}>Your tasks</h1>
           <InputSearch value={search} onValueChange={setSearch} placeholder='поиск...' />
         </div>
+
         <div className={styles.content}>
-          {KANBAN_STACK_TYPES.map((stackType) => (
+          {KANBAN_STACK_TYPES.map(({ type, title }) => (
             <KanbanStack
-              key={stackType.type}
-              title={stackType.title}
-              type={stackType.type}
-              onTaskDrop={onTaskDrop}
+              key={type}
+              title={title}
+              type={type}
+              onTaskDrop={handleDropTask}
               onCreateTask={handleEmptyTask}
-              withCreateButton={!withNewTask && stackType.type === 'todo'}
+              shouldShowCreateButton={!shouldShowNewTask && type === KanbanTaskTypeEnum.TODO}
             >
-              {withNewTask && stackType.type === 'todo' ? (
-                <KanbanTask onSubmit={onTaskCreate} onClose={handleEmptyTask} />
-              ) : null}
+              {shouldShowNewTask && type === KanbanTaskTypeEnum.TODO && (
+                <KanbanTask onSubmit={handleCreateTask} onClose={handleEmptyTask} />
+              )}
+
               <FlipMove typeName={null}>
-                {tasks?.[stackType.type].map((task) => (
-                  <KanbanTask key={task.id} task={task} onDelete={onTaskDelete} onSubmit={onTaskEdit} />
+                {tasks?.[type].map((task) => (
+                  <KanbanTask key={task.id} task={task} onDelete={handleDeleteTask} onSubmit={handleEditTask} />
                 ))}
               </FlipMove>
             </KanbanStack>

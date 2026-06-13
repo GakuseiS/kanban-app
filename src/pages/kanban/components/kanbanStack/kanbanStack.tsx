@@ -1,38 +1,42 @@
-import { FC, ReactNode, DragEvent } from 'react';
-import type { TKanbanTask, TKanbanTaskType } from '@/store/kanban.type';
+import { FC, ReactNode, DragEvent, PropsWithChildren } from 'react';
+
 import { GhostIcon, HappyIcon, SmileIcon, UpsideDownIcon } from '@/ui/icons';
-import { KANBAN_TASK_DRAG_KEY } from '@/constants/kanban';
+
+import { KANBAN_TASK_DRAG_KEY } from '../../constants';
+import { KanbanTaskTypeEnum, IKanbanTask } from '../../types';
+
 import styles from './kanbanStack.module.scss';
 
-type KanbanStackProps = {
+type Props = PropsWithChildren<{
+  /** Заголовок */
   title: string;
-  type: TKanbanTaskType;
-  children: ReactNode;
-  onTaskDrop: (task: TKanbanTask, type: TKanbanTaskType) => void;
+  /** Тип */
+  type: KanbanTaskTypeEnum;
+  /** С кнопкой создания */
+  shouldShowCreateButton: boolean;
+  /** Обработчик создания задачи */
   onCreateTask: VoidFunction;
-  withCreateButton: boolean;
-};
+  /** Обработчик дропа задачи */
+  onTaskDrop: (task: IKanbanTask, type: KanbanTaskTypeEnum) => void;
+}>;
 
-const KANBAN_STACK_ICONS = {
+/** Иконки колонок канбана в зависимости от типа */
+const KANBAN_STACK_ICONS: Record<KanbanTaskTypeEnum, ReactNode> = {
   todo: <HappyIcon />,
   in_progress: <SmileIcon />,
   review: <UpsideDownIcon />,
   done: <GhostIcon />,
 };
 
-export const KanbanStack: FC<KanbanStackProps> = ({
-  title,
-  type,
-  children,
-  onTaskDrop,
-  onCreateTask,
-  withCreateButton,
-}) => {
-  const handleOnDragOver = (event: DragEvent<HTMLDivElement>) => {
+/** Колонка канбана */
+export const KanbanStack: FC<Props> = ({ title, type, children, onTaskDrop, onCreateTask, shouldShowCreateButton }) => {
+  const handleOnDragOver = (event: DragEvent<HTMLDivElement>): void => {
     event.preventDefault();
   };
-  const handleOnDrop = (event: DragEvent<HTMLDivElement>) => {
+
+  const handleOnDrop = (event: DragEvent<HTMLDivElement>): void => {
     const task = JSON.parse(event.dataTransfer.getData(KANBAN_TASK_DRAG_KEY));
+
     onTaskDrop(task, type);
   };
 
@@ -43,11 +47,12 @@ export const KanbanStack: FC<KanbanStackProps> = ({
           {KANBAN_STACK_ICONS[type]}
           <h3>{title}</h3>
         </div>
-        {withCreateButton ? (
+
+        {shouldShowCreateButton && (
           <button className={styles.button} onClick={onCreateTask}>
             + Добавить
           </button>
-        ) : null}
+        )}
       </div>
       <div className={styles.tasks}>{children}</div>
     </div>

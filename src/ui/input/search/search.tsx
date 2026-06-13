@@ -1,21 +1,27 @@
 import { ChangeEvent, FC } from 'react';
-import { SearchIcon } from '../../icons';
+
+import { SearchIcon } from '@/ui/icons';
+
 import styles from './search.module.scss';
 
-type InputSearchProps = {
+type Props = {
+  /** Значение поля */
   value?: string;
-  onValueChange?: (value: string) => void;
+  /** Плейсхолдер */
   placeholder?: string;
+  /** Обработчик изменения значения */
+  onValueChange?: (value: string) => void;
 };
 
-export const InputSearch: FC<InputSearchProps> = ({ value, onValueChange, placeholder }) => {
-  const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    onValueChange?.(event.target.value);
+/** Поле поиска */
+export const InputSearch: FC<Props> = ({ value, onValueChange, placeholder }) => {
+  const handleChange = ({ target }: ChangeEvent<HTMLInputElement>): void => {
+    onValueChange?.(target.value);
   };
 
   return (
     <div className={styles.container}>
-      <input className={styles.input} value={value} onChange={onInputChange} placeholder={placeholder} />
+      <input className={styles.input} value={value} onChange={handleChange} placeholder={placeholder} />
       <span className={styles.icon}>
         <SearchIcon />
       </span>

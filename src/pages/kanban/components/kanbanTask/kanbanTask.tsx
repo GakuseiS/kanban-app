@@ -1,95 +1,113 @@
 import { FC, forwardRef } from 'react';
 import clsx from 'clsx';
-import type { TKanbanTask, TKanbanTaskType } from '@/store/kanban.type';
-import { getDateMonthYear } from '@/utils/dateConvert';
+
+import { getDateMonthYear } from '@/utils';
 import { CheckIcon, CrossIcon, EditIcon, TrashIcon } from '@/ui/icons';
-import { InputText } from '@/ui/input/text';
-import { InputDate } from '@/ui/input/date';
+import { InputText, InputDate } from '@/ui';
+
 import { useKanbanTask } from './useKanbanTask';
-import { isTaskOutdated } from './lib/isTaskOutdated';
+import { isTaskOutdated } from './lib';
+import { KanbanTaskTypeEnum, IKanbanTask } from '../../types';
+
 import styles from './kanbanTask.module.scss';
 
-type KanbanTaskProps = {
-  task?: TKanbanTask;
-  onDelete?: (id: number, type: TKanbanTaskType) => void;
-  onSubmit: (task: TKanbanTask) => void;
+type Props = {
+  /** Данные задачи */
+  task?: IKanbanTask;
+  /** Обработчик отправки формы */
+  onSubmit: (task: IKanbanTask) => void;
+  /** Обработчик закрытия */
   onClose?: VoidFunction;
+  /** Обработчик удаления */
+  onDelete?: (id: number, type: KanbanTaskTypeEnum) => void;
 };
 
-export const KanbanTask: FC<KanbanTaskProps> = forwardRef<HTMLDivElement, KanbanTaskProps>((props, ref) => {
+/** Задача канбана */
+export const KanbanTask: FC<Props> = forwardRef<HTMLDivElement, Props>((props, ref) => {
   const { task } = props;
+
   const {
     taskFields,
     isEditMode,
     errors,
     isValid,
-    onTrashClick,
-    onFieldChange,
-    onCrossClick,
-    onSubmitClick,
-    onValidate,
+    handleChangeField,
+    handleClickTrash,
+    handleClickCross,
+    handleSubmit,
+    handleValidate,
     handleEditMode,
     handleOnDrag,
   } = useKanbanTask(props);
+
+  const isEditOrCreateTask = isEditMode || !task;
 
   return (
     <div ref={ref} className={styles.container} draggable={!!task} onDragStart={(event) => handleOnDrag(event, task)}>
       <div className={styles.row}>
         <span className={styles.label}>Начало:</span>
-        {isEditMode || !task ? (
+
+        {isEditOrCreateTask && (
           <InputDate
             value={taskFields.startDay}
-            error={errors.startDay}
-            onValueChange={(value) => onFieldChange('startDay', value)}
-            setError={(isValid) => onValidate('startDay', isValid)}
+            hasError={errors.startDay}
+            onValueChange={(value) => handleChangeField('startDay', value)}
+            setError={(isValid) => handleValidate('startDay', isValid)}
           />
-        ) : (
-          <span className={styles.value}>{getDateMonthYear(task.startDay)}</span>
         )}
-        {!isEditMode ? (
+
+        {!isEditOrCreateTask && <span className={styles.value}>{getDateMonthYear(task.startDay)}</span>}
+
+        {!isEditMode && (
           <div className={styles.actions}>
             <button className={styles.edit} onClick={handleEditMode}>
               <EditIcon width={18} height={18} />
             </button>
-            <button className={styles.trash} onClick={onTrashClick}>
+            <button className={styles.trash} onClick={handleClickTrash}>
               <TrashIcon width={18} height={18} />
             </button>
           </div>
-        ) : null}
+        )}
       </div>
       <div className={styles.row}>
         <span className={styles.label}>Окончание:</span>
-        {isEditMode || !task ? (
+
+        {isEditOrCreateTask && (
           <InputDate
             value={taskFields.endDay}
-            error={errors.endDay}
-            onValueChange={(value) => onFieldChange('endDay', value)}
-            setError={(isValid) => onValidate('endDay', isValid)}
+            hasError={errors.endDay}
+            onValueChange={(value) => handleChangeField('endDay', value)}
+            setError={(isValid) => handleValidate('endDay', isValid)}
           />
-        ) : (
+        )}
+
+        {!isEditOrCreateTask && (
           <span className={clsx(styles.value, isTaskOutdated(task) && styles.overdue)}>
             {getDateMonthYear(task.endDay)}
           </span>
         )}
       </div>
+
       <div className={styles.row}>
         <span className={styles.label}>Описание:</span>
-        {isEditMode || !task ? (
-          <InputText value={taskFields.text} onValueChange={(value) => onFieldChange('text', value)} />
-        ) : (
-          <span className={styles.value}>{task.text}</span>
+
+        {isEditOrCreateTask && (
+          <InputText value={taskFields.text} onValueChange={(value) => handleChangeField('text', value)} />
         )}
+
+        {!isEditOrCreateTask && <span className={styles.value}>{task.text}</span>}
       </div>
-      {isEditMode ? (
+
+      {isEditMode && (
         <div className={styles.buttons}>
-          <button className={styles.button} onClick={onCrossClick}>
+          <button className={styles.button} onClick={handleClickCross}>
             <CrossIcon />
           </button>
-          <button className={styles.button} onClick={onSubmitClick} disabled={!isValid}>
+          <button className={styles.button} onClick={handleSubmit} disabled={!isValid}>
             <CheckIcon />
           </button>
         </div>
-      ) : null}
+      )}
     </div>
   );
 });

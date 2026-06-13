@@ -1,11 +1,25 @@
-import { TKanbanTask } from '../../../../../store/kanban.type';
+import { IKanbanTask, KanbanTaskTypeEnum } from '../../../types';
 
-export const isTaskOutdated = (task: TKanbanTask) => {
-  if (task.type === 'done') return false;
+/** Проверяет является ли задача просроченной
+ *
+ * @param task Задача канбана
+ * @returns Результат проверки
+ */
+export const isTaskOutdated = (task: IKanbanTask): boolean => {
+  if (task.type === KanbanTaskTypeEnum.DONE) {
+    return false;
+  }
+
   return isDateInPast(task.endDay);
 };
 
-export const isDateInPast = (date: number | Date) => {
+/** Проверяет находится ли дата в прошлом
+ *
+ * @param date Дата или таймтамп
+ * @returns Результат проверки
+ */
+const isDateInPast = (date: number | Date): boolean => {
   const todayDate = new Date();
+
   return new Date(date) < todayDate;
 };

@@ -1,57 +1,57 @@
 .container {
-    padding         : 32px 0 32px 16px;
-    background-color: var(--black);
-    overflow        : hidden;
+  padding: 32px 0 32px 16px;
+  background-color: var(--black);
+  overflow: hidden;
 
-    .head {
-        display      : flex;
-        align-items  : center;
-        margin-bottom: 16px;
-        padding-right: 16px;
+  .head {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-right: 16px;
 
-        .titleGroup {
-            display       : flex;
-            align-items   : center;
-            gap           : 8px;
-            font-size     : 24px;
-            line-height   : 28px;
-            letter-spacing: 0.0036em;
-        }
-
-        .button {
-            margin-left     : auto;
-            color           : var(--white-60);
-            user-select     : none;
-            cursor          : pointer;
-            background-color: transparent;
-
-            &:hover {
-                color: var(--blue);
-            }
-        }
+    .titleGroup {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 24px;
+      line-height: 28px;
+      letter-spacing: 0.0036em;
     }
 
-    .tasks {
-        position      : relative;
-        display       : grid;
-        gap           : 16px;
-        overflow-y    : auto;
-        max-height    : calc(100vh - 150px - 58px - 120px);
-        max-height    : calc(100dvh - 150px - 58px - 120px);
-        padding-right : 16px;
-        align-items   : start;
-        grid-auto-rows: max-content;
+    .button {
+      margin-left: auto;
+      color: var(--white-60);
+      user-select: none;
+      background-color: transparent;
+      cursor: pointer;
 
-        &::-webkit-scrollbar-thumb {
-            background: var(--white-30);
-        }
-
-        &::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        &::-webkit-scrollbar-track {
-            background-color: var(--white-10);
-        }
+      &:hover {
+        color: var(--blue);
+      }
     }
+  }
+
+  .tasks {
+    position: relative;
+    display: grid;
+    gap: 16px;
+    overflow-y: auto;
+    max-height: calc(100vh - 150px - 58px - 120px);
+    max-height: calc(100dvh - 150px - 58px - 120px);
+    padding-right: 16px;
+    align-items: start;
+    grid-auto-rows: max-content;
+
+    &::-webkit-scrollbar-thumb {
+      background: var(--white-30);
+    }
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: var(--white-10);
+    }
+  }
 }

@@ -1,0 +1,8 @@
+/** Проверяет строку на то, что она является датой
+ *
+ * @param string Строка
+ * @returns Результат проверки
+ */
+export const isDateString = (string: string): boolean => {
+  return !!string.match(/^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d$/g);
+};

@@ -1,35 +1,61 @@
-import { useEffect, useState } from 'react';
-import type { TKanbanTask, TKanbanTaskType } from '@/store/kanban.type';
-import { useDebouncedValue } from '@/hooks/useDebouncedValue';
-import { KANBAN_TASKS_KEY } from '@/constants/kanban';
-import { KANBAN_DATA } from '@/store/kanbanData';
-import { isDateString } from '@/utils/dateUtils';
-import { getDateMonthYear } from '@/utils/dateConvert';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
-type TTasksState = Record<TKanbanTaskType, TKanbanTask[]>;
+import { useDebouncedValue } from '@/hooks';
+import { isDateString, getDateMonthYear } from '@/utils';
+import { KANBAN_DATA, KANBAN_TASKS_KEY } from './constants';
+import { KanbanTaskTypeEnum, IKanbanTask, ITasksState } from './types';
 
-export const useKanban = () => {
-  const [initTasks, setInitTasks] = useState<TTasksState>();
-  const [tasks, setTasks] = useState<TTasksState>();
+type ReturnType = {
+  /** Строка поиска */
+  search: string;
+  /** Задачи */
+  tasks?: ITasksState;
+  /** Есть ли новая задача */
+  shouldShowNewTask: boolean;
+  /** Сеттер строки поиска */
+  setSearch: Dispatch<SetStateAction<string>>;
+  /** Обработчик удаления задачи */
+  handleDeleteTask: (id: number, type: KanbanTaskTypeEnum) => ITasksState | undefined;
+  /** Обработчик редактирования задачи */
+  handleEditTask: (task: IKanbanTask) => void;
+  /** Обработчик отпускания задачи */
+  handleDropTask: (task: IKanbanTask, type: KanbanTaskTypeEnum) => void;
+  /** Обработчик очищения задачи */
+  handleEmptyTask: VoidFunction;
+  /** Обработчик создания задачи */
+  handleCreateTask: (task: IKanbanTask) => void;
+};
+
+/** Хук логики канбана */
+export const useKanban = (): ReturnType => {
+  const [initTasks, setInitTasks] = useState<ITasksState>();
+  const [tasks, setTasks] = useState<ITasksState>();
   const [search, setSearch] = useState<string>('');
+  const [shouldShowNewTask, setShouldShowNewTask] = useState<boolean>(false);
+
   const debouncedSearch = useDebouncedValue<string>(search, 300);
-  const [withNewTask, setWithNewTask] = useState<boolean>(false);
 
   useEffect(() => {
     const localStorageTasks = localStorage.getItem(KANBAN_TASKS_KEY);
     const preparedTasks = localStorageTasks ? JSON.parse(localStorageTasks) : groupTasksByType(sortTasks(KANBAN_DATA));
+
     setTasks(preparedTasks);
     setInitTasks(preparedTasks);
   }, []);
 
   useEffect(() => {
-    const queryTasks = (search: string) => {
-      if (!initTasks) return;
+    const queryTasks = (search: string): void => {
+      if (!initTasks) {
+        return;
+      }
+
       if (search) {
         const nextState = Object.entries(initTasks).reduce((accumulator, [key, tasks]) => {
-          const tasksKey = key as TKanbanTaskType;
+          const tasksKey = key as KanbanTaskTypeEnum;
+
           return { ...accumulator, [tasksKey]: tasks.filter((task) => queryTaskForMatch(search, task)) };
-        }, {} as TTasksState);
+        }, {} as ITasksState);
+
         setTasks(nextState);
       } else {
         setTasks(initTasks);
@@ -39,83 +65,106 @@ export const useKanban = () => {
     queryTasks(debouncedSearch);
   }, [debouncedSearch, initTasks]);
 
-  const onTaskEdit = (task: TKanbanTask) => {
+  const handleEditTask = (task: IKanbanTask): void => {
     const typedTasks = tasks?.[task.type];
     const taskIndex = typedTasks?.findIndex((typedTask) => typedTask.id === task.id);
-    if (taskIndex === undefined || !tasks || !typedTasks) return;
+
+    if (taskIndex === undefined || !tasks || !typedTasks) {
+      return;
+    }
+
     const preparedTasks = sortTasks(typedTasks.with(taskIndex, task));
+
     updateTasksState({ ...tasks, [task.type]: preparedTasks });
   };
 
-  const onTaskCreate = (task: TKanbanTask) => {
+  const handleCreateTask = (task: IKanbanTask): void => {
     const typedTasks = tasks?.[task.type];
-    if (!tasks || !typedTasks) return;
+
+    if (!tasks || !typedTasks) {
+      return;
+    }
+
     const preparedTasks = sortTasks([task, ...typedTasks]);
+
     updateTasksState({ ...tasks, [task.type]: preparedTasks });
     handleEmptyTask();
   };
 
-  const sortTasks = (tasks: TKanbanTask[]) => {
-    return tasks.sort((a, b) => a.startDay - b.startDay);
-  };
+  const handleDropTask = (task: IKanbanTask, type: KanbanTaskTypeEnum): void => {
+    const updatedTasks = handleDeleteTask(task.id, task.type);
 
-  const groupTasksByType = (tasks: TKanbanTask[]) => {
-    return tasks.reduce((accumulator, currentValue) => {
-      const type = currentValue.type;
-      return { ...accumulator, [type]: accumulator[type] ? [...accumulator[type], currentValue] : [currentValue] };
-    }, {} as TTasksState);
-  };
-  const onTaskDrop = (task: TKanbanTask, type: TKanbanTaskType) => {
-    const updatedTasks = onTaskDelete(task.id, task.type);
-    if (!updatedTasks) return;
+    if (!updatedTasks) {
+      return;
+    }
+
     const sortedTasksByType = sortTasks([...updatedTasks[type], { ...task, type }]);
     const nextState = { ...updatedTasks, [type]: sortedTasksByType };
+
     updateTasksState(nextState);
   };
 
-  const onTaskDelete = (id: number, type: TKanbanTaskType) => {
+  const handleDeleteTask = (id: number, type: KanbanTaskTypeEnum): ITasksState | undefined => {
     const typedTasks = tasks?.[type];
     const taskIndex = typedTasks?.findIndex((task) => task.id === id);
-    if (taskIndex === undefined || !tasks || !typedTasks) return;
+
+    if (taskIndex === undefined || !tasks || !typedTasks) {
+      return;
+    }
+
     const preparedTasks = typedTasks.toSpliced(taskIndex, 1);
     const nextState = { ...tasks, [type]: preparedTasks };
+
     updateTasksState(nextState);
+
     return nextState;
   };
 
-  const updateTasksState = (tasks: TTasksState) => {
-    setTasks(tasks);
-    updateLocalStorage(tasks);
+  const handleEmptyTask = (): void => {
+    setShouldShowNewTask((prev) => !prev);
   };
 
-  const updateLocalStorage = (tasks: TTasksState) => {
+  const sortTasks = (tasks: IKanbanTask[]): IKanbanTask[] => {
+    return tasks.sort((leftTask, rightTask) => leftTask.startDay - rightTask.startDay);
+  };
+
+  const groupTasksByType = (tasks: IKanbanTask[]): ITasksState => {
+    return tasks.reduce((accumulator, currentValue) => {
+      const type = currentValue.type;
+
+      return { ...accumulator, [type]: accumulator[type] ? [...accumulator[type], currentValue] : [currentValue] };
+    }, {} as ITasksState);
+  };
+
+  const updateTasksState = (tasks: ITasksState): void => {
+    setTasks(tasks);
     localStorage.setItem(KANBAN_TASKS_KEY, JSON.stringify(tasks));
   };
 
-  const queryTaskForMatch = (query: string, task: TKanbanTask) => {
+  const queryTaskForMatch = (query: string, task: IKanbanTask): boolean => {
     const isQueryHasDate = isDateString(query);
+
     if (isQueryHasDate) {
       const isTaskDateHasMatch =
         getDateMonthYear(task.startDay).includes(query) || getDateMonthYear(task.endDay).includes(query);
+
       return isTaskDateHasMatch;
     }
-    const isTextMatches = task.text.toLowerCase().includes(query.toLowerCase());
-    return isTextMatches;
-  };
 
-  const handleEmptyTask = () => {
-    setWithNewTask((prev) => !prev);
+    const isTextMatches = task.text.toLowerCase().includes(query.toLowerCase());
+
+    return isTextMatches;
   };
 
   return {
     search,
     tasks,
-    withNewTask,
+    shouldShowNewTask,
     setSearch,
-    onTaskDelete,
-    onTaskEdit,
-    onTaskDrop,
+    handleDeleteTask,
+    handleEditTask,
+    handleDropTask,
     handleEmptyTask,
-    onTaskCreate,
+    handleCreateTask,
   };
 };

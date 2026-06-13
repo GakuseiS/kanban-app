@@ -1,65 +1,83 @@
 import { ChangeEvent, FC } from 'react';
 import { InputText } from '../text';
 
-type InputDateProps = {
+type Props = {
+  /** Значение */
   value?: string;
-  onValueChange?: (date: string) => void;
+  /** Плейсхолдер */
   placeholder?: string;
-  error?: boolean;
+  /** Есть ли ошибка */
+  hasError?: boolean;
+  /** Сеттер ошибки */
   setError?: (valid: boolean) => void;
+  /** Обработчик изменения значения */
+  onValueChange?: (date: string) => void;
 };
 
-export const InputDate: FC<InputDateProps> = (props) => {
-  const { value, onValueChange, setError, error, placeholder = 'дд.мм.гггг' } = props;
+/** Поле с датой */
+export const InputDate: FC<Props> = (props) => {
+  const { value, onValueChange, setError, hasError, placeholder = 'дд.мм.гггг' } = props;
 
-  const onBlur = () => {
+  const handleBlur = () => {
     setError?.(value?.length !== 10);
   };
 
-  const onInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
-    const value = evt.target.value.replaceAll(/[\D]/g, '');
+  const handleChangeInput = ({ target }: ChangeEvent<HTMLInputElement>): void => {
+    const value = target.value.replaceAll(/[\D]/g, '');
     const groups = [value.substring(0, 2), value.substring(2, 4), value.substring(4, 8)];
     const filteredGroups: string[] = [];
-    groups.forEach((group, idx) => {
-      if (group) {
-        if (idx === 0) {
-          let date = group;
-          if (+group > 31) {
-            date = '31';
-          }
-          if (group === '00') {
-            date = '01';
-          }
-          filteredGroups.push(date);
+
+    groups.forEach((group, index) => {
+      if (!group) {
+        return;
+      }
+
+      if (index === 0) {
+        let day = group;
+
+        if (Number(day) > 31) {
+          day = '31';
         }
-        if (idx === 1) {
-          let month = group;
-          if (+group > 12) {
-            month = '12';
-          }
-          if (group === '00') {
-            month = '01';
-          }
-          filteredGroups.push(month);
+
+        if (day === '00') {
+          day = '01';
         }
-        if (idx === 2) {
-          const year = group;
-          filteredGroups.push(year);
+
+        filteredGroups.push(day);
+      }
+
+      if (index === 1) {
+        let month = group;
+
+        if (Number(month) > 12) {
+          month = '12';
         }
+
+        if (month === '00') {
+          month = '01';
+        }
+
+        filteredGroups.push(month);
+      }
+
+      if (index === 2) {
+        filteredGroups.push(group);
       }
     });
-    const resDate = filteredGroups.join('.');
-    onValueChange?.(resDate);
+
+    const resultDate = filteredGroups.join('.');
+
+    onValueChange?.(resultDate);
   };
 
   return (
     <InputText
       type='tel'
       value={value}
-      onChange={onInputChange}
-      error={error}
+      onChange={handleChangeInput}
+      hasError={hasError}
       placeholder={placeholder}
-      onBlur={onBlur}
+      onBlur={handleBlur}
     />
   );
 };

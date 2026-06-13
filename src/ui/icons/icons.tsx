@@ -1,4 +1,5 @@
 /// <reference types="vite-plugin-svgr/client" />
+
 export { default as SearchIcon } from './images/icon_search.svg?react';
 export { default as SmileIcon } from './images/icon_smile.svg?react';
 export { default as TrashIcon } from './images/icon_trash.svg?react';
