@@ -23,7 +23,7 @@
     "noUncheckedSideEffectImports": true,
     "paths": {
       "@/*": ["./src/*"],
-      "@icons": ["./ui/icons"]
+      "@icons": ["./src/ui/icons"]
     }
   },
   "include": ["src", "svrg.d.ts"]

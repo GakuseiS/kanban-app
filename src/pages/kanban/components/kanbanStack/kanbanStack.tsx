@@ -1,6 +1,6 @@
 import { FC, ReactNode, DragEvent, PropsWithChildren } from 'react';
 
-import { GhostIcon, HappyIcon, SmileIcon, UpsideDownIcon } from '@/ui/icons';
+import { GhostIcon, HappyIcon, SmileIcon, UpsideDownIcon } from '@icons';
 
 import { KANBAN_TASK_DRAG_KEY } from '../../constants';
 import { KanbanTaskTypeEnum, IKanbanTask } from '../../types';

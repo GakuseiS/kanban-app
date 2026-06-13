@@ -3,8 +3,7 @@ import FlipMove from 'react-flip-move';
 
 import { Container, InputSearch } from '@/ui';
 
-import { KanbanStack } from './components/kanbanStack';
-import { KanbanTask } from './components/kanbanTask';
+import { KanbanStack, KanbanTask } from './components';
 import { useKanban } from './useKanban';
 import { KANBAN_STACK_TYPES } from './constants';
 import { KanbanTaskTypeEnum } from './types';

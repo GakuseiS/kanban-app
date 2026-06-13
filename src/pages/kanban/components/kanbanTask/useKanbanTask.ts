@@ -41,7 +41,7 @@ type ReturnType = {
   /** Обработчик валидации */
   handleValidate: (name: keyof ITaskFieldsErrorsState) => (value: boolean) => void;
   /** Обработчик наведения при перетаскивании */
-  handleOnDrag: (event: DragEvent<HTMLDivElement>, task?: IKanbanTask) => void;
+  handleOnDrag: (task?: IKanbanTask) => (event: DragEvent<HTMLDivElement>) => void;
 };
 
 /** Хук логики задачи канбана */
@@ -97,13 +97,15 @@ export const useKanbanTask = ({ task, onDelete, onSubmit, onClose }: Params): Re
       setErrors((prev) => ({ ...prev, [name]: value }));
     };
 
-  const handleOnDrag = (event: DragEvent<HTMLDivElement>, task?: IKanbanTask): void => {
-    if (!task) {
-      return;
-    }
+  const handleOnDrag =
+    (task?: IKanbanTask) =>
+    (event: DragEvent<HTMLDivElement>): void => {
+      if (!task) {
+        return;
+      }
 
-    event.dataTransfer.setData(KANBAN_TASK_DRAG_KEY, JSON.stringify(task));
-  };
+      event.dataTransfer.setData(KANBAN_TASK_DRAG_KEY, JSON.stringify(task));
+    };
 
   const resetState = (): void => {
     if (!task) {

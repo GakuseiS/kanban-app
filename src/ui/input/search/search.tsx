@@ -1,6 +1,6 @@
 import { ChangeEvent, FC } from 'react';
 
-import { SearchIcon } from '@/ui/icons';
+import { SearchIcon } from '@icons';
 
 import styles from './search.module.scss';
 

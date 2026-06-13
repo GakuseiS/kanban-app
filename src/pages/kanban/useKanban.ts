@@ -38,7 +38,9 @@ export const useKanban = (): ReturnType => {
 
   useEffect(() => {
     const localStorageTasks = localStorage.getItem(KANBAN_TASKS_KEY);
-    const preparedTasks = localStorageTasks ? JSON.parse(localStorageTasks) : groupTasksByType(sortTasks(KANBAN_DATA));
+    const preparedTasks: ITasksState = localStorageTasks
+      ? JSON.parse(localStorageTasks)
+      : groupTasksByType(sortTasks(KANBAN_DATA));
 
     setTasks(preparedTasks);
     setInitTasks(preparedTasks);

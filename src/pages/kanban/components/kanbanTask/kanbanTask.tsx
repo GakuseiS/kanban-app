@@ -2,7 +2,7 @@ import { FC, forwardRef } from 'react';
 import clsx from 'clsx';
 
 import { getDateMonthYear } from '@/utils';
-import { CheckIcon, CrossIcon, EditIcon, TrashIcon } from '@/ui/icons';
+import { CheckIcon, CrossIcon, EditIcon, TrashIcon } from '@icons';
 import { InputText, InputDate } from '@/ui';
 
 import { useKanbanTask } from './useKanbanTask';
@@ -43,7 +43,7 @@ export const KanbanTask: FC<Props> = forwardRef<HTMLDivElement, Props>((props, r
   const isEditOrCreateTask = isEditMode || !task;
 
   return (
-    <div ref={ref} className={styles.container} draggable={!!task} onDragStart={(event) => handleOnDrag(event, task)}>
+    <div ref={ref} className={styles.container} draggable={!!task} onDragStart={handleOnDrag(task)}>
       <div className={styles.row}>
         <span className={styles.label}>Начало:</span>
 
