@@ -40,14 +40,14 @@ export const KanbanTask: FC<Props> = forwardRef<HTMLDivElement, Props>((props, r
     handleOnDrag,
   } = useKanbanTask(props);
 
-  const isEditOrCreateTask = isEditMode || !task;
+  const isEditOrCreateMode = isEditMode || !task;
 
   return (
     <div ref={ref} className={styles.container} draggable={!!task} onDragStart={handleOnDrag(task)}>
       <div className={styles.row}>
         <span className={styles.label}>Начало:</span>
 
-        {isEditOrCreateTask && (
+        {isEditOrCreateMode && (
           <InputDate
             value={taskFields.startDay}
             hasError={errors.startDay}
@@ -56,7 +56,7 @@ export const KanbanTask: FC<Props> = forwardRef<HTMLDivElement, Props>((props, r
           />
         )}
 
-        {!isEditOrCreateTask && <span className={styles.value}>{getDateMonthYear(task.startDay)}</span>}
+        {!isEditOrCreateMode && <span className={styles.value}>{getDateMonthYear(task.startDay)}</span>}
 
         {!isEditMode && (
           <div className={styles.actions}>
@@ -72,7 +72,7 @@ export const KanbanTask: FC<Props> = forwardRef<HTMLDivElement, Props>((props, r
       <div className={styles.row}>
         <span className={styles.label}>Окончание:</span>
 
-        {isEditOrCreateTask && (
+        {isEditOrCreateMode && (
           <InputDate
             value={taskFields.endDay}
             hasError={errors.endDay}
@@ -81,7 +81,7 @@ export const KanbanTask: FC<Props> = forwardRef<HTMLDivElement, Props>((props, r
           />
         )}
 
-        {!isEditOrCreateTask && (
+        {!isEditOrCreateMode && (
           <span className={clsx(styles.value, isTaskOutdated(task) && styles.overdue)}>
             {getDateMonthYear(task.endDay)}
           </span>
@@ -91,9 +91,9 @@ export const KanbanTask: FC<Props> = forwardRef<HTMLDivElement, Props>((props, r
       <div className={styles.row}>
         <span className={styles.label}>Описание:</span>
 
-        {isEditOrCreateTask && <InputText value={taskFields.text} onValueChange={handleChangeField('text')} />}
+        {isEditOrCreateMode && <InputText value={taskFields.text} onValueChange={handleChangeField('text')} />}
 
-        {!isEditOrCreateTask && <span className={styles.value}>{task.text}</span>}
+        {!isEditOrCreateMode && <span className={styles.value}>{task.text}</span>}
       </div>
 
       {isEditMode && (
